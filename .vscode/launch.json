@@ -6,12 +6,10 @@
                                "name":  "SCBoard OAuth",
                                "request":  "launch",
                                "mainClass":  "com.scboard.ScBoardApplication",
+                               "envFile":  "${workspaceFolder}/.env",
                                "env":  {
-                                           "SPRING_PROFILES_ACTIVE":  "dev,oauth",
-                                           "GOOGLE_CLIENT_ID":  "${env:GOOGLE_CLIENT_ID}",
-                                           "GOOGLE_CLIENT_SECRET":  "${env:GOOGLE_CLIENT_SECRET}"
-                                       },
-                               "projectName":  "scboard-SCboard_3.0"
+                                           "SPRING_PROFILES_ACTIVE":  "dev,oauth"
+                                       }
                            }
                        ]
 }
