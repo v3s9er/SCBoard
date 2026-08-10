@@ -1,0 +1,81 @@
+<!-- 게시글과 댓글을 보는 화면 -->
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title th:text="${post.title} + ' · SCBoard'">게시글</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<main>
+  <div class="container">
+    <div class="card">
+      <h1 class="post-title" th:text="${post.title}">제목</h1>
+      <div class="post-meta">
+        <span th:text="${post.authorNickname}">작성자</span>
+        <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</span>
+      </div>
+
+      <div class="post-content" th:utext="${post.content}">내용</div>
+
+      <div class="attachments" th:if="${!post.attachments.isEmpty()}">
+        <h3>첨부파일</h3>
+        <ul>
+          <li th:each="file : ${post.attachments}">
+            📎 <a th:href="@{|/files/${file.id}|}" th:text="${file.originalName}">파일명</a>
+            <span class="size" th:text="'(' + ${#numbers.formatInteger(file.size / 1024 + 1, 1, 'COMMA')} + ' KB)'">(1 KB)</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="detail-actions" th:if="${currentUserId != null}">
+        <a th:href="@{|/posts/${post.id}/edit|}" class="btn btn-sm">수정</a>
+        
+        <form th:if="${currentUserId == post.authorId}" th:action="@{|/posts/${post.id}/delete|}" method="post" class="inline"
+              onsubmit="return confirm('정말 삭제할까요?');">
+          <button type="submit" class="btn btn-sm btn-danger">삭제</button>
+        </form>
+      </div>
+
+      <div class="comments">
+        <h3 th:text="'댓글 ' + ${post.comments.size()} + '개'">댓글</h3>
+
+        <div class="comment" th:each="comment : ${post.comments}">
+          <div class="comment-head">
+            <span class="who" th:text="${comment.authorNickname}">닉네임</span>
+            <span class="when" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</span>
+          </div>
+          <div class="comment-body" th:utext="${comment.content}">댓글 내용</div>
+
+          <div class="comment-tools" th:if="${currentUserId == comment.authorId}">
+            <form th:action="@{|/comments/${comment.id}/edit|}" method="post" class="comment-tools">
+              <input type="hidden" name="postId" th:value="${post.id}"/>
+              <input type="text" name="content" th:value="${comment.content}"/>
+              <button type="submit" class="btn btn-sm">수정</button>
+            </form>
+            <form th:if="${currentUserId == comment.authorId}" th:action="@{|/comments/${comment.id}/delete|}" method="post" class="inline">
+              <button type="submit" class="btn btn-sm btn-danger">삭제</button>
+            </form>
+          </div>
+        </div>
+
+        <p class="field-error" th:if="${commentError}" th:text="${commentError}"></p>
+        <form th:if="${session.loginUserId != null}" th:action="@{|/posts/${post.id}/comments|}" th:object="${commentForm}" method="post" class="comment-form">
+          <textarea th:field="*{content}" placeholder="댓글을 입력하세요" required></textarea>
+          <div><button type="submit" class="btn btn-primary btn-sm">댓글 등록</button></div>
+        </form>
+        
+        <p th:if="${session.loginUserId == null}" class="login-hint">
+          댓글을 쓰려면 <a th:href="@{/login}">로그인</a>하세요.
+        </p>
+      </div>
+    </div>
+
+    <a th:href="@{/posts}" class="back-link">← 목록으로</a>
+  </div>
+</main>
+</body>
+</html>

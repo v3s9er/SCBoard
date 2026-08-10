@@ -1,0 +1,40 @@
+services:
+  mysql:
+    image: 'mysql:8.4'
+    container_name: scboard-mysql
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-scboard}
+      MYSQL_USER: ${MYSQL_USER:-scboard}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-dev-password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-dev-root-password}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD-SHELL', 'mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD']
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  app:
+    build: .
+    container_name: scboard-app
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-scboard}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-scboard}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD:-dev-password}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      APP_UPLOAD_DIR: /app/uploads
+      SPRING_DOCKER_COMPOSE_ENABLED: 'false'
+    ports:
+      - '8080:8080'
+    volumes:
+      - uploads:/app/uploads
+
+volumes:
+  mysql-data:
+  uploads:

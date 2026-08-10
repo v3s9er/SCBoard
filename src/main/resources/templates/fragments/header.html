@@ -1,0 +1,24 @@
+<!-- 모든 화면 상단 메뉴 -->
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header" class="site-header">
+  <div class="container header-inner">
+    <a class="brand" th:href="@{/posts}">📋 SCBoard</a>
+    <nav class="nav">
+      <a th:href="@{/posts}">목록</a>
+      <a th:if="${session.loginUserId != null}" th:href="@{/posts/new}">글쓰기</a>
+      <span th:if="${session.loginUserId != null}" class="user">
+        <b th:text="${session.loginNickname}">닉네임</b>님
+      </span>
+      <form th:if="${session.loginUserId != null}" th:action="@{/logout}" method="post" class="inline">
+        <button type="submit" class="linkbtn">로그아웃</button>
+      </form>
+      <a th:if="${session.loginUserId == null}" th:href="@{/login}">로그인</a>
+      <a th:if="${session.loginUserId == null}" th:href="@{/signup}">회원가입</a>
+    </nav>
+  </div>
+</header>
+</body>
+</html>

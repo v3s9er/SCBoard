@@ -1,0 +1,58 @@
+<!-- 게시글 목록 화면 -->
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>SCBoard</title>
+  
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+<main>
+  <div class="container">
+    <div class="page-head">
+      <h1>SCBoard</h1>
+      
+      <a th:if="${session.loginUserId != null}" th:href="@{/posts/new}" class="btn btn-primary">글쓰기</a>
+    </div>
+
+    <table class="board">
+      <thead>
+        <tr>
+          <th class="col-id">번호</th>
+          <th>제목</th>
+          <th class="col-meta">작성자</th>
+          <th class="col-meta">작성일</th>
+          <th class="col-cnt">댓글</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr th:if="${postPage.isEmpty()}">
+          <td colspan="5" class="empty">아직 게시글이 없습니다.</td>
+        </tr>
+        
+        <tr th:each="post : ${postPage.content}">
+          <td class="col-id" th:text="${post.id}">1</td>
+          
+          <td><a th:href="@{|/posts/${post.id}|}" th:text="${post.title}">제목</a></td>
+          <td class="col-meta" th:text="${post.authorNickname}">작성자</td>
+          
+          <td class="col-meta" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</td>
+          <td class="col-cnt" th:text="${post.commentCount}">0</td>
+        </tr>
+      </tbody>
+    </table>
+    <nav class="pagination" th:if="${postPage.totalPages > 1}" aria-label="게시글 페이지">
+      <a th:if="${postPage.hasPrevious()}" th:href="@{/posts(page=${postPage.number - 1})}">이전</a>
+      <span th:text="|${postPage.number + 1} / ${postPage.totalPages}|">1 / 1</span>
+      <a th:if="${postPage.hasNext()}" th:href="@{/posts(page=${postPage.number + 1})}">다음</a>
+    </nav>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: scboard
+  profiles:
+    default: dev
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+  thymeleaf:
+    cache: true
+  flyway:
+    baseline-on-migrate: true
+    baseline-version: 1
+
+app:
+  upload-dir: ${APP_UPLOAD_DIR:./uploads}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true
+    env:
+      show-values: always
+      keys-to-sanitize: ""
+    configprops:
+      show-values: always
+    shutdown:
+      access: unrestricted
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    env:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+server:
+  servlet:
+    session:
+      cookie:
+        http-only: false
+        secure: false

@@ -1,0 +1,60 @@
+<!-- 게시글을 쓰고 수정하는 화면 -->
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title th:text="${edit} ? '글 수정 · SCBoard' : '글쓰기 · SCBoard'">글쓰기</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<main>
+  <div class="container">
+    <div class="card">
+      <h1 th:text="${edit} ? '글 수정' : '글쓰기'">글쓰기</h1>
+
+      <div class="attachments" th:if="${edit and !post.attachments.isEmpty()}">
+        <h3>현재 첨부파일</h3>
+        <ul>
+          <li th:each="file : ${post.attachments}">
+            📎 <a th:href="@{|/files/${file.id}|}" th:text="${file.originalName}">파일명</a>
+            <form th:if="${currentUserId == post.authorId}" th:action="@{|/files/${file.id}/delete|}" method="post" class="inline"
+                  onsubmit="return confirm('이 첨부파일을 삭제할까요?');">
+              <button type="submit" class="btn btn-sm btn-danger">삭제</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+
+      <form th:action="${edit} ? @{|/posts/${post.id}/edit|} : @{/posts}"
+            th:object="${postForm}" method="post" enctype="multipart/form-data">
+        <div class="form-row">
+          <label for="title">제목</label>
+          
+          <input type="text" id="title" th:field="*{title}"/>
+          
+          <div class="field-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+        </div>
+        <div class="form-row">
+          <label for="content">내용</label>
+          <textarea id="content" th:field="*{content}"></textarea>
+          <div class="field-error" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
+        </div>
+
+        <div class="form-row">
+          <label for="files" th:text="${edit} ? '첨부파일 추가 (여러 개 선택 가능)' : '첨부파일 (여러 개 선택 가능)'">첨부파일</label>
+          <input type="file" id="files" name="files" multiple/>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" th:text="${edit} ? '수정' : '작성'">작성</button>
+          <a th:href="@{/posts}" class="btn">취소</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+</body>
+</html>
