@@ -61,38 +61,7 @@ Docker Desktop에서 개발용 MySQL을 먼저 실행합니다.
 docker compose -f compose.yaml up -d
 ```
 
-VS Code에서 `SCBoard OAuth` 실행 구성을 선택합니다. Google 로그인 설정은 아래 절차를 따릅니다.
-
-### VS Code에서 Google 로그인 실행하기
-
-먼저 `.env.example`을 `.env`로 복사하고 `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`에 발급받은 값을 입력합니다. Docker용 MySQL 설정은 그대로 두어도 됩니다.
-
-그 다음 `.vscode/launch.json`의 `SCBoard OAuth` 실행 구성을 아래처럼 설정합니다. `envFile`이 `.env`의 Google 키를 읽고, `env`의 `dev,oauth` 프로필이 `.env`의 Docker용 프로필보다 우선합니다.
-
-```json
-{
-  "type": "java",
-  "name": "SCBoard OAuth",
-  "request": "launch",
-  "mainClass": "com.scboard.ScBoardApplication",
-  "envFile": "${workspaceFolder}/.env",
-  "env": {
-    "SPRING_PROFILES_ACTIVE": "dev,oauth"
-  }
-}
-```
-
-`projectName`은 실제 Java 프로젝트 이름과 달라 `ConfigError: The project '...' is not a valid java project` 오류를 낼 수 있으므로 넣지 않습니다.
-
-이후 VS Code에서 `SCBoard OAuth`를 선택하고 `F5`로 실행합니다. 이 구성은 `dev,oauth` 프로필로 실행되므로 `compose.yaml`의 개발용 MySQL을 사용합니다.
-
-Google Cloud Console에는 기본 실행 주소와 동일한 아래 리디렉션 URI를 등록해야 합니다.
-
-```text
-http://localhost:8080/login/oauth2/code/google
-```
-
-8080 이외의 포트로 실행한다면, Google Cloud Console에 등록한 URI와 `GOOGLE_REDIRECT_URI` 값도 같은 주소로 맞춰야 합니다.
+VS Code에서 `SCBoard OAuth` 실행 구성을 선택합니다. Google 로그인까지 확인하려면 VS Code 환경 변수 `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`에 발급받은 값을 설정합니다.
 
 ## 확인 주소
 

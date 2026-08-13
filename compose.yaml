@@ -1,3 +1,6 @@
+# SCboard_3.0에서 이미 실행 중인 개발 DB와 볼륨을 함께 사용한다.
+name: scboard_30
+
 services:
   mysql:
     image: 'mysql:8.4'

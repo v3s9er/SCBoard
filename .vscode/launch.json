@@ -1,15 +1,22 @@
 {
     "version":  "0.2.0",
     "configurations":  [
-                           {
-                               "type":  "java",
-                               "name":  "SCBoard OAuth",
-                               "request":  "launch",
-                               "mainClass":  "com.scboard.ScBoardApplication",
-                               "envFile":  "${workspaceFolder}/.env",
-                               "env":  {
-                                           "SPRING_PROFILES_ACTIVE":  "dev,oauth"
-                                       }
-                           }
-                       ]
+        {
+            "type": "java",
+            "name": "ScBoardApplication",
+            "request": "launch",
+            "mainClass": "com.scboard.ScBoardApplication",
+            "projectName": "SCboard_3.0"
+        },
+        {
+            "type": "java",
+            "name": "SCBoard OAuth",
+            "request": "launch",
+            "mainClass": "com.scboard.ScBoardApplication",
+            "envFile": "${workspaceFolder}/.env",
+            "env": {
+                "SPRING_PROFILES_ACTIVE": "dev,oauth"
+            }
+        }
+    ]
 }
