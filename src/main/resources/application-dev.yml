@@ -18,7 +18,8 @@ spring:
     compose:
       enabled: true
       file: compose.yaml
-      lifecycle-management: start-and-stop
+      # 공유 개발 DB는 애플리케이션 종료 시 중지하지 않는다.
+      lifecycle-management: start-only
   thymeleaf:
     cache: false
 

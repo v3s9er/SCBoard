@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title th:text="${edit} ? '글 수정 · SCBoard' : '글쓰기 · SCBoard'">글쓰기</title>
   <link rel="stylesheet" th:href="@{/css/style.css}"/>
+  <script th:src="@{/js/fragment-loader.js}" defer></script>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
