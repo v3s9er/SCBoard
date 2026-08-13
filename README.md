@@ -1,4 +1,4 @@
-# SCBoard 3.0
+# SCBoard 3.3
 
 세션 로그인 기반의 Spring Boot 게시판입니다. 일반 회원가입과 로그인, Google OAuth 2.0 로그인, 게시글과 댓글 CRUD, 파일 업로드·다운로드, Spring Boot Actuator를 제공합니다.
 
