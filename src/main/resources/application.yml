@@ -25,32 +25,37 @@ springdoc:
     path: /swagger-ui.html
 
 management:
-  endpoint:
-    health:
-      show-details: always
-      show-components: always
-      probes:
-        enabled: true
-    env:
-      show-values: always
-      keys-to-sanitize: ""
-    configprops:
-      show-values: always
-    shutdown:
-      access: unrestricted
   endpoints:
     web:
       exposure:
-        include: "*"
-  info:
-    env:
-      enabled: true
-  metrics:
-    tags:
-      application: ${spring.application.name}
+        # [WEB-SER-031 조치] env, beans, metrics 등 기밀 노출 엔드포인트를 차단하고 health만 노출
+        include: "health"
+  endpoint:
+    shutdown:
+      # [서비스 거부(DoS) 방지] 외부에서 POST 요청으로 서버를 강제 종료하지 못하도록 비활성화
+      enabled: false
+    health:
+      # [시스템 정보 노출 방지] DB 정보나 서버 상세 스펙을 숨기고 서버 생존 여부(UP/DOWN)만 표시
+      show-details: never
+      show-components: never
+
+
+# [WEB-SER-051 조치]
+# 사이트 통신을 HTTPS로 암호화 및 쿠키에 보안조치.
 server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: ${SSL_KEYSTORE_PASSWORD:scboard1234}
+    key-store-type: PKCS12
+    key-alias: scboard
+    enabled-protocols: TLSv1.2,TLSv1.3 #원활한 진단을 위해 1.2 허용.
   servlet:
     session:
       cookie:
-        http-only: false
-        secure: false
+        http-only: true
+        # [수정 전 Line 56: secure: false]
+        # [수정 후]: HTTPS 통신에서만 쿠키가 전송되도록 Secure 플래그 활성화
+        secure: true
+        same-site: lax
