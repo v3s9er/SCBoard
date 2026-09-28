@@ -52,5 +52,5 @@ server:
   servlet:
     session:
       cookie:
-        http-only: false
+        http-only: true #세션 쿠키의 자바스크립트를 차단하기 위해 true로 변경
         secure: false
